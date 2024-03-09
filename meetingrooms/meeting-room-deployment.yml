@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meeting-room-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: meeting-room
+  template:
+    metadata:
+      labels:
+        component: meeting-room
+    spec:
+      containers:
+        - name: meeting-room
+          image: grzesiekoladele/room:v1
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: meeting-room-config

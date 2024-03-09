@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: law-case-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: law-case
+  template:
+    metadata:
+      labels:
+        component: law-case
+    spec:
+      containers:
+        - name: law-case
+          image: grzesiekoladele/cases:v1
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: law-case-config

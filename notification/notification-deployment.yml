@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: notification
+  template:
+    metadata:
+      labels:
+        component: notification
+    spec:
+      containers:
+        - name: notification
+          image: grzesiekoladele/notification:v1
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: notification-config

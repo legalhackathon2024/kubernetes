@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-database-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: client-database
+  template:
+    metadata:
+      labels:
+        component: client-database
+    spec:
+      volumes:
+        - name: client-storage
+          persistentVolumeClaim:
+            claimName: client-persistent-volume-claim
+      containers:
+        - name: client-database
+          image: grzesiekoladele/clients:v1
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: client-storage
+              subPath: client-database
+          envFrom:
+            - configMapRef:
+                name: client-db-config

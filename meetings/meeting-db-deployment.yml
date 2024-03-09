@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meeting-database-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: meeting-database
+  template:
+    metadata:
+      labels:
+        component: meeting-database
+    spec:
+      volumes:
+        - name: meeting-storage
+          persistentVolumeClaim:
+            claimName: meeting-persistent-volume-claim
+      containers:
+        - name: meeting-database
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: meeting-storage
+              subPath: meeting-database
+          envFrom:
+            - configMapRef:
+                name: meeting-db-config

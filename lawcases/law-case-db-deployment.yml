@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: law-case-database-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: law-case-database
+  template:
+    metadata:
+      labels:
+        component: law-case-database
+    spec:
+      volumes:
+        - name: law-case-storage
+          persistentVolumeClaim:
+            claimName: law-case-persistent-volume-claim
+      containers:
+        - name: law-case-database
+          image: postgres:16-alpine
+          ports:
+            - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: law-case-storage
+              subPath: law-case-database
+          envFrom:
+            - configMapRef:
+                name: law-case-db-config

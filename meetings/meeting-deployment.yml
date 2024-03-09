@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: meeting-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: meeting
+  template:
+    metadata:
+      labels:
+        component: meeting
+    spec:
+      containers:
+        - name: meeting
+          image: grzesiekoladele/meeting:v1
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: meeting-config
